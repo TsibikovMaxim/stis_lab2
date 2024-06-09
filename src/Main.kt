@@ -2,7 +2,7 @@ interface Entity
 
 // region Users
 
-    open class User(
+open class User(
     open val name: String
 ) : Entity {
     constructor() : this("")
