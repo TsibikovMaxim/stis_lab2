@@ -1,19 +1,19 @@
-interface Entity
+open class Entity
 
 // region Users
 
 open class User(
-    open val name: String
-) : Entity {
+    open var name: String
+) : Entity() {
     constructor() : this("")
 }
 
 data class Reader(
-    override val name: String,
+    override var name: String,
 ) : User(name)
 
 data class Author(
-    override val name: String,
+    override var name: String,
 ) : User(name)
 
 // endregion Users
@@ -21,18 +21,18 @@ data class Author(
 // region Books
 
 open class Book(
-    open val name: String,
-    open val publicationDate: String,
-    open val authors: List<Author>
-) : Entity {
+    open var name: String,
+    open var publicationDate: String,
+    open var authors: List<Author>
+) : Entity() {
     constructor() : this("", "", listOf())
 }
 
 data class EBook(
-    override val name: String,
-    override val publicationDate: String,
-    override val authors: List<Author>,
-    val pageCount: Int
+    override var name: String,
+    override var publicationDate: String,
+    override var authors: List<Author>,
+    var pageCount: Int
 ) : Book(name, publicationDate, authors) {
     constructor(name: String, publicationDate: String, author: Author, pageCount: Int) : this(
         name = name,
@@ -43,10 +43,10 @@ data class EBook(
 }
 
 data class AudioBook(
-    override val name: String,
-    override val publicationDate: String,
-    override val authors: List<Author>,
-    val speakerName: String
+    override var name: String,
+    override var publicationDate: String,
+    override var authors: List<Author>,
+    var speakerName: String
 ) : Book(name, publicationDate, authors)
 
 // endregion Books
@@ -54,16 +54,16 @@ data class AudioBook(
 // region Subscription
 
 open class Subscription(
-    open val startDate: String,
-    open val endDate: String
-) : Entity {
+    open var startDate: String,
+    open var endDate: String
+) : Entity() {
     constructor() : this("", "")
 }
 
 data class ReaderSubscription(
-    val reader: Reader,
-    override val startDate: String,
-    override val endDate: String
+    var reader: Reader,
+    override var startDate: String,
+    override var endDate: String
 ) : Subscription(startDate, endDate)
 
 // endregion Subscription
@@ -100,7 +100,7 @@ infix fun Concept.IsSubconcept(other: Concept) {
 
 infix fun Entity.isInstance(concept: Concept) {
     println("Is ${this} instance of ${concept}: " +
-            "${this.javaClass == concept.entity.javaClass}")
+            "${concept.entity::class.isInstance(this) || concept.parents.any { it::class.isInstance(this) }}")
 }
 
 // endregion Concept
